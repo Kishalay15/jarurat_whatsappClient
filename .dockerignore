@@ -1,0 +1,25 @@
+# Maven & IDE folders
+target/
+!.mvn/
+!.mvn/wrapper/
+.idea/
+*.iml
+*.ipr
+
+# Logs & build artifacts
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# Git
+.git
+.gitignore
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+
+# Only include the JAR file
+!target/whatsappClient-0.0.1-SNAPSHOT.jar
