@@ -18,9 +18,13 @@ public class ChatController {
 
     @PostMapping("/webhook")
     public ResponseEntity<ChatMessage> recieveMessage(@RequestBody ChatMessage message) {
-        ChatMessage recieveMessage =  chatService.processIncomingMessage(message);
+        try {
+            ChatMessage recieveMessage =  chatService.processIncomingMessage(message);
 
-        return new ResponseEntity<>(recieveMessage, HttpStatus.OK);
+            return new ResponseEntity<>(recieveMessage, HttpStatus.OK);
+        } catch (Exception e){
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @PostMapping("/send")

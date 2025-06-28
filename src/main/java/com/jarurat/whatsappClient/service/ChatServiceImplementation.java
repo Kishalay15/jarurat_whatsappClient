@@ -31,9 +31,16 @@ public class ChatServiceImplementation implements ChatService {
 
     @Override
     public ChatMessage saveMessage(ChatMessage message) {
-        Firestore firestore = FirestoreClient.getFirestore();
-        firestore.collection(COLLECTION_NAME).add(message);
-        return message;
+        try {
+            Firestore firestore = FirestoreClient.getFirestore();
+            DocumentReference docRef = firestore.collection(COLLECTION_NAME).add(message).get();
+            message.setId(docRef.getId());
+
+            return message;
+        } catch (Exception e) {
+            System.err.println("Error saving message: " + e.getMessage());
+            throw new RuntimeException("Could not save message", e);
+        }
     }
 
     @Override
@@ -42,17 +49,23 @@ public class ChatServiceImplementation implements ChatService {
         Firestore firestore = FirestoreClient.getFirestore();
 
         try {
-            ApiFuture<QuerySnapshot> future = firestore.collection(COLLECTION_NAME).whereEqualTo("senderId", senderId).get();
+            ApiFuture<QuerySnapshot> future = firestore.collection(COLLECTION_NAME)
+                    .whereEqualTo("senderId", senderId)
+                    .get();
 
             List<QueryDocumentSnapshot> docs = future.get().getDocuments();
 
             for (DocumentSnapshot doc : docs) {
-                messages.add(doc.toObject(ChatMessage.class));
+                ChatMessage message = doc.toObject(ChatMessage.class);
+                message.setId(doc.getId());
+                messages.add(message);
             }
+
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to fetch messages for sender: " + senderId, e);
         }
 
         return messages;
     }
+
 }
