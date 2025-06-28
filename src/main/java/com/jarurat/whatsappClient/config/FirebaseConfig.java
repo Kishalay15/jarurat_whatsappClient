@@ -19,9 +19,9 @@ public class FirebaseConfig {
         try{
             String firebaseConfig = System.getenv("FIREBASE_CONFIG");
 
-            InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("target-whatsapp-firebase-adminsdk-fbsvc-98c8290ca7.json");
+//            InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("target-whatsapp-firebase-adminsdk-fbsvc-98c8290ca7.json");
 
-//            InputStream serviceAccount = new ByteArrayInputStream(firebaseConfig.getBytes(StandardCharsets.UTF_8));
+            InputStream serviceAccount = new ByteArrayInputStream(firebaseConfig.getBytes(StandardCharsets.UTF_8));
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
